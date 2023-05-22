@@ -1,12 +1,12 @@
-# Pull the base beeline dockerhub image
-FROM grnbeeline/pidc:base
+FROM julia:1.9
 
-ENV LC_ALL=C.UTF-8 
-ENV LANG=C.UTF-8 
+WORKDIR /
+COPY installPackages.jl /
 
-RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list
+# Julia libs we want
+RUN julia installPackages.jl
 
-RUN apt-get update && apt-get install -y python3-pip
+RUN apt-get update && apt-get install -y time python3-pip
 
 # Set the working directory to /app
 WORKDIR /app
@@ -22,8 +22,5 @@ COPY . /app
 # Expose port 5000 for the Flask app to listen on
 EXPOSE 5000
 
-# Set the environment variable for Flask
-ENV FLASK_APP=app.py
-
 # Start the Flask app
-CMD ["flask", "run", "--host", "0.0.0.0"]
+CMD ["flask", "--app", "pidc", "run", "--host", "0.0.0.0", "--debug"]

@@ -6,23 +6,26 @@ import json
 import numpy as np
 import shutil
 
-DATASET_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sample_data')
+from .zenodo import load_file
+
+#DATASET_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'sample_data')
 
 
-def generateInputs(dataset_uri):
+def generateInputs(zenodo_id):
     '''
     Function to generate desired inputs for SCODE.
     If the folder/files under RunnerObj.datadir exist, 
     this function will not do anything.
     '''
-    expressionDataPath = os.path.join(DATASET_PATH, dataset_uri)
+    #expressionDataPath = os.path.join(DATASET_PATH, dataset_uri)
 
     os.makedirs("/tmp/", exist_ok=True) # Create the /tmp/ directory if it doesn't exist
     uniqueID = str(uuid.uuid4())
     tempUniqueDirPath = "/tmp/" + uniqueID
     os.makedirs(tempUniqueDirPath, exist_ok=True)
     
-    ExpressionData = pd.read_csv(expressionDataPath, header=0, index_col=0)
+    ExpressionData = load_file(zenodo_id, 'ExpressionData.csv')
+
     ExpressionData.to_csv(tempUniqueDirPath + "/ConvertedExpressionData.csv", sep = '\t', header  = True, index = True)
     return tempUniqueDirPath
     
