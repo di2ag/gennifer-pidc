@@ -10,5 +10,5 @@ markupsafe==1.1.1
 pandas==0.25.3
 pytz==2022.7.1 
 six==1.16.0 
-werkzeug==1.0.1 
+werkzeug==2.2.3 
 zipp==1.2.0 
