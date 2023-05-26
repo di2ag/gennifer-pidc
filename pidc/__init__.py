@@ -7,9 +7,19 @@ from flask_restful import Resource, Api, reqparse
 from .gennifer_api import generateInputs, run, parseOutput
 
 def create_app(test_config=None):
+# Initialise environment variables
+
+    # Read secret key
+    secret_key_filepath = os.environ.get("SECRET_KEY_FILE", None)
+    if secret_key_filepath:
+        with open(secret_key_filepath, 'r') as sk_file:
+            SECRET_KEY = sk_file.readline().strip()
+    else:
+        SECRET_KEY = 'dev'
+
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-            SECRET_KEY='dev',
+            SECRET_KEY=SECRET_KEY,
             )
     if test_config is None:
         # Load this instance config, if it exists, when not testing
