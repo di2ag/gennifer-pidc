@@ -19,9 +19,6 @@ COPY . /app
 # chown all the files to the app user
 RUN chown -R gennifer_user:gennifer_user /app
 
-# Expose port 5000 for the Flask app to listen on
-EXPOSE 5000
-
 USER gennifer_user
 
 # Julia libs we want

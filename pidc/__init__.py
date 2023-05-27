@@ -1,10 +1,12 @@
 import os
+import json
 import requests_cache
 
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
+from celery.result import AsyncResult
 
-from .gennifer_api import generateInputs, run, parseOutput
+from .tasks import create_task
 
 def create_app(test_config=None):
 # Initialise environment variables
@@ -43,14 +45,27 @@ def create_app(test_config=None):
     parser = reqparse.RequestParser()
     parser.add_argument('zenodo_id')
 
-    class RunAlgo(Resource):
+    class RunAlgorithm(Resource):
+        
         def post(self):
             args = parser.parse_args()
-            inputs = generateInputs(args['zenodo_id'])
-            res = run(inputs)
-            output = parseOutput(res)
-            return output, 201
+            task = create_task.delay(args["zenodo_id"])
+            return {"task_id": task.id}, 202
 
-    api.add_resource(RunAlgo, '/run')
+        def get(self, task_id):
+            task_result = AsyncResult(task_id)
+            result = {
+                    "task_id": task_id,
+                    "task_status": task_result.status,
+                    "task_result": task_result.result,
+                    }
+            return result, 200
+            
+            #inputs = generateInputs(args['zenodo_id'])
+            #res = run(inputs)
+            #output = parseOutput(res)
+            #return output, 201
+
+    api.add_resource(RunAlgorithm, '/run', '/status/<task_id>')
 
     return app

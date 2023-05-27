@@ -36,7 +36,6 @@ def run(tempUniqueDirPath):
     outPath = tempUniqueDirPath + '/outFile.txt'
 
     cmdToRun = ' '.join(['julia runPIDC.jl', tempUniqueDirPath + "/ConvertedExpressionData.csv", outPath])
-    print(cmdToRun)
     os.system(cmdToRun)
 
     return tempUniqueDirPath
@@ -59,5 +58,5 @@ def parseOutput(tempUniqueDirPath):
 
     shutil.rmtree(tempUniqueDirPath)
     
-    return json.dumps(results)
+    return results
     
