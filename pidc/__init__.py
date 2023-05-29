@@ -50,7 +50,7 @@ def create_app(test_config=None):
         def post(self):
             args = parser.parse_args()
             task = create_task.delay(args["zenodo_id"])
-            return {"task_id": task.id}, 202
+            return {"task_id": task.id}, 200
 
         def get(self, task_id):
             task_result = AsyncResult(task_id)

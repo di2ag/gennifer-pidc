@@ -13,16 +13,17 @@ COPY ./requirements.txt /app
 # Install the required packages
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-# Copy the current directory contents into the container at /app
-COPY . /app
-
 # chown all the files to the app user
 RUN chown -R gennifer_user:gennifer_user /app
 
 USER gennifer_user
 
 # Julia libs we want
+COPY ./installPackages.jl /app
 RUN julia installPackages.jl
+
+# Copy the current directory contents into the container at /app
+COPY . /app
 
 # Start the Flask app
 CMD ["flask", "--app", "pidc", "run", "--host", "0.0.0.0", "--debug"]
