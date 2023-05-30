@@ -6,7 +6,7 @@ from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from celery.result import AsyncResult
 
-from .tasks import create_task
+from .tasks import create_pidc_task
 
 def create_app(test_config=None):
 # Initialise environment variables
@@ -49,7 +49,7 @@ def create_app(test_config=None):
         
         def post(self):
             args = parser.parse_args()
-            task = create_task.delay(args["zenodo_id"])
+            task = create_pidc_task.delay(args["zenodo_id"])
             return {"task_id": task.id}, 200
 
         def get(self, task_id):
@@ -61,11 +61,6 @@ def create_app(test_config=None):
                     }
             return result, 200
             
-            #inputs = generateInputs(args['zenodo_id'])
-            #res = run(inputs)
-            #output = parseOutput(res)
-            #return output, 201
-
     api.add_resource(RunAlgorithm, '/run', '/status/<task_id>')
 
     return app
