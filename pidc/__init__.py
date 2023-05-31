@@ -60,7 +60,22 @@ def create_app(test_config=None):
                     "task_result": task_result.result,
                     }
             return result, 200
+
+    class AlgorithmInfo(Resource):
+
+        def get(self):
+            # Specify algorithm info here.
+            info = {
+                    "name": 'pidc',
+                    "description": 'PIDC is available in a Julia package titled “NetworkInference”. This package has options to compute various network inference algorithms such has Mutual Information, CLR, PUC and PIDC. We used the maximum likelihood estimator, as recommended by the authors. We did not use any edge-weight cut-off. We converted the resulting undircted network in the form of an adjacency matrix into to a ranked edge list.',
+                    "edge_weight_type": 'maximum_liklihood_estimator',
+                    "edge_weight_description": "",
+                    }
+            return info, 200
+
+
             
     api.add_resource(RunAlgorithm, '/run', '/status/<task_id>')
+    api.add_resource(AlgorithmInfo, '/info')
 
     return app
