@@ -71,6 +71,7 @@ def create_app(test_config=None):
                     "edge_weight_type": 'maximum_liklihood_estimator',
                     "edge_weight_description": "",
                     "directed": False,
+                    "hyperparameters": None,
                     }
             return info, 200
 
